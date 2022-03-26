@@ -14,7 +14,14 @@ def search(topic):
     response = requests.get("http://192.168.1.135:5000/search/" + topic)
     return response.content
 
-
+# info opearation
+# return  information about specific book according to given ID
+# this req send to catalog server 
+@app.route('/information/<int:id>', methods=['Get'])
+def information_id(id):
+    response = requests.get("http://192.168.1.135:5000/information/" + str(id))
+    return response.content
+    
 
 if __name__ == "__main__":
   app.run(debug=True, port=3500)
