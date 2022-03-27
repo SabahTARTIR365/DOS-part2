@@ -1,6 +1,7 @@
 from flask import Flask
 app = Flask(__name__)
-
+orderIpAddress= "192.168.1.14"
+catalogIpAddress="192.168.1.13"
 @app.route("/")
 def hello():
   return "Hello World!"
@@ -11,7 +12,7 @@ def hello():
 # this reqest send to the catalog server
 @app.route('/search/<topic>', methods=['Get'])
 def search(topic):
-    response = requests.get("http://192.168.1.135:5000/search/" + topic)
+    response = requests.get("http://"+catalogIpAddress+":5000/search/" + topic)
     return response.content
 
 # info opearation
@@ -19,9 +20,17 @@ def search(topic):
 # this req send to catalog server 
 @app.route('/information/<int:id>', methods=['Get'])
 def information_id(id):
-    response = requests.get("http://192.168.1.135:5000/information/" + str(id))
+    response = requests.get("http://"+catalogIpAddress+":5000/information/" + str(id))
     return response.content
-    
+
+# purchase opearation
+#this post req will be sent to ORDER server in order to purchase a number 
+# of specific book
+@app.route('/purchase/<int:id>', methods=['Post'])
+def purchase(id):
+    amount = request.json['amount']
+    response = requests.post("http://"+orderIpAddress+":5000/purchase/" + str(id), {'amount': amount})#fix address for order
+    return response.content
 
 if __name__ == "__main__":
   app.run(debug=True, port=3500)
