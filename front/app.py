@@ -24,11 +24,10 @@ def information_id(id):
     return response.content
 
 # purchase opearation
-#this post req will be sent to ORDER server in order to purchase a number 
-# of specific book
+#this post req will be sent to ORDER server in order to purchase specific book
 @app.route('/purchase/<int:id>', methods=['Post'])
 def purchase(id):
-    response = requests.post("http://"+orderIpAddress+":5000/purchase/" + str(id))#fix address for order
+    response = requests.post("http://"+orderIpAddress+":5000/purchase/" + str(id))
     return response.content
 
 if __name__ == "__main__":
