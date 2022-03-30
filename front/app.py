@@ -28,8 +28,7 @@ def information_id(id):
 # of specific book
 @app.route('/purchase/<int:id>', methods=['Post'])
 def purchase(id):
-    amount = request.json['amount']
-    response = requests.post("http://"+orderIpAddress+":5000/purchase/" + str(id), {'amount': amount})#fix address for order
+    response = requests.post("http://"+orderIpAddress+":5000/purchase/" + str(id))#fix address for order
     return response.content
 
 if __name__ == "__main__":
