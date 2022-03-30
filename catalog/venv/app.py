@@ -1,6 +1,9 @@
 from flask import Flask
 from flask_restful import Resource, Api
+import sqlite3
 
+#connect to db 
+conn = sqlite3.connect('store.db')
 app = Flask(__name__)
 api = Api(app)
 
