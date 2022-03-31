@@ -1,5 +1,5 @@
-from flask import Flask , request,jsonify
-import requests
+from flask import Flask ,jsonify, request 
+#import requests
 
 app = Flask(__name__)
 orderIpAddress= "192.168.1.14"
