@@ -1,7 +1,8 @@
 from flask import Flask
+import requests
 app = Flask(__name__)
 orderIpAddress= "192.168.1.14"
-catalogIpAddress="192.168.1.13"
+catalogIpAddress="192.168.1.70"
 @app.route("/")
 def hello():
   return "Hello World!"
@@ -18,9 +19,9 @@ def search(topic):
 # info opearation
 # return  information about specific book according to given ID
 # this req send to catalog server 
-@app.route('/information/<int:id>', methods=['Get'])
+@app.route('/info/<int:id>', methods=['Get'])
 def information_id(id):
-    response = requests.get("http://"+catalogIpAddress+":5000/information/" + str(id))
+    response = requests.get("http://"+catalogIpAddress+":5000/info/" + str(id))
     return response.content
 
 # purchase opearation
