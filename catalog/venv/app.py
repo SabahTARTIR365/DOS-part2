@@ -66,10 +66,14 @@ def getCount(id):
              
 @app.route('/update/<int:id>/<int:amount>',methods=['POST'])
 def update(id,amount):
+   query = 'select * from books where item_number =  "' + str(id)+'"'
+   rows = getFromDB(query)
+   if(len(rows)==0) :
+          return{'result ': 'update failed ,unkown Book Id'}
    query='update books set quantity='+str(amount)+' where item_number= "' + str(id)+'"'
    rows = getFromDB(query)
        
-   return{'result ': rows}
+   return{'result ': "update successed"}
     
        
               
