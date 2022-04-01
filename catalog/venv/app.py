@@ -63,6 +63,15 @@ def getCount(id):
        
        return {'quantity of the book in stock':rows[0][0]}
 
+             
+@app.route('/update/<int:id>/<int:amount>',methods=['POST'])
+def update(id,amount):
+   query='update books set quantity='+str(amount)+' where item_number= "' + str(id)+'"'
+   rows = getFromDB(query)
+       
+   return{'result ': rows}
+    
+       
               
 class HelloWorld(Resource):
     def get(self):
