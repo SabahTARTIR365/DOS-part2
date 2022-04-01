@@ -20,9 +20,8 @@ def getFromDB(stetment):
     return rows;
     
 
-#search(topic)
-class searchTopic(Resource):
-    def get(self,topic):
+@app.route('/search/<topic>',methods=['GET'])
+def searchTopic(topic):
        topic1 = topic.replace("%20"," ")
 
        query='select title,quantity from books where topic= "' + topic1+'"'
@@ -34,7 +33,6 @@ class searchTopic(Resource):
           dic =dict(title = i[0],quantity = i[1])
           finalResult.append(dic)
        return {'result ':finalResult}
-
 
 
 #search according to item number and return all info 
@@ -58,7 +56,7 @@ class HelloWorld(Resource):
         return {'hello': 'world'}
 
 api.add_resource(HelloWorld, '/')
-api.add_resource(searchTopic, '/search/<topic>')
+
 api.add_resource(info, '/info/<int:number>')
 
 if __name__ == '__main__':
