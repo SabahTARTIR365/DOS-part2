@@ -52,6 +52,18 @@ def info(number):
           finalResult.append(dic)
        return {'result ':finalResult}
               
+              
+@app.route('/count/<int:id>',methods=['GET'])
+def getCount(id):
+       
+       query='select quantity from books where item_number= "' + str(id)+'"'
+       rows = getFromDB(query)
+       if(len(rows)==0) :
+          return{'result ': 'unkown Book'}
+       
+       return {'quantity of the book in stock':rows[0][0]}
+
+              
 class HelloWorld(Resource):
     def get(self):
         return {'hello': 'world'}
