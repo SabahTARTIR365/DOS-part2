@@ -35,10 +35,11 @@ def searchTopic(topic):
        return {'result ':finalResult}
 
 
-#search according to item number and return all info 
-class info(Resource):
-    def get(self,number):
 
+#search according to item number and return all info 
+@app.route('/info/<int:number>',methods=['GET'])
+def info(number):
+    
        query='select * from books where item_number='+ str(number)
        rows =getFromDB(query)
        if(len(rows)==0) :
@@ -57,7 +58,6 @@ class HelloWorld(Resource):
 
 api.add_resource(HelloWorld, '/')
 
-api.add_resource(info, '/info/<int:number>')
 
 if __name__ == '__main__':
     app.run(debug=True)
