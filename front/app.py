@@ -31,5 +31,13 @@ def purchase(id):
     response = requests.post("http://"+orderIpAddress+":5000/purchase/" + str(id))
     return response.content
 
+# this req will be used from the internal system by the admin in order to
+#update price of specific book - it will send to catalog server
+@app.route('/update_price/<int:id>', methods=['Put'])
+def update_price(id):
+    price = request.json['price']
+    response = requests.put("http://"+catalogIpAddress+":5000/update_price/" + str(id), {'price': price})
+    return response.content
+
 if __name__ == "__main__":
   app.run(debug=True, port=3500)
