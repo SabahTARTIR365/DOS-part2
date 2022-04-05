@@ -16,18 +16,27 @@ def purchase(id):
     #then it will dec the number of books and sent aprovel; if not it will reject
     # the req
     amount = requests.get("http://"+catalogIpAddress+":5000/count/" + str(id))
-    return amount.content_type
-    if amount.content ==0:
+    if (amount.text=="fail"):
+      return jsonify({"result":"unkown Book"})
+    int_amount=int(amount.text)
+    
+    if int_amount ==0:
          return jsonify({"result":"the stock is empty"})
     else:
-     amount2=int(amount.content)-1
+     amount2=int_amount-1
      amount3=str(amount2)
-     response  = requests.put("http://"+catalogIpAddress+":5000/update/"+ str(id), {'amount':amount3})
-     x = response.json()
+     response  = requests.put("http://"+catalogIpAddress+":5000/update_amount/"+ str(id), {'amount':amount2})
+    res = response.json()
+    
+    if (res=={'result ':"update successed"}):
+      return jsonify({"result":"purchase process done successfully"})
 
-     if x['result'][0] =="decreased quantity sucsesfully":
-        return "the order was placed"
-     else :  return "the order was cancelled"
 
 if __name__ == '__main__':
     app.run(debug = True,port=3500),
+    
+    
+    
+    
+    
+    
