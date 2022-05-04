@@ -82,7 +82,8 @@ def update(id):
    query='update books set quantity='+str(amount)+' where item_number= "' + str(id)+'"'
    rows = getFromDB(query)
    #I need to send that to catalog2
-   response  = requests.put("http://"+catalogIpAddress+":"+Port1+"/update_amount_consistancy/"+ str(id), {'amount':amount2})
+   response  = requests.put("http://"+catalogIpAddress+":"+Port1+"/update_amount_consistancy/"+ str(id), {'amount':amount})
+   response2=  requests.delete("http://"+frontIpAddress+":5000"+"/delete_from_cache/"+str(id))
    return{'result ': "update successed"}
 
 #this request comes from Catalog Replicas
@@ -110,7 +111,7 @@ def update_price(id):
     sqlite_query = 'update books set cost ='+str(price)+' where item_number ='+str(id)
     rows = getFromDB(sqlite_query)
     response = requests.put("http://"+catalogIpAddress+":"+Port1+"/update_price_consistancy/" + str(id), {'price': price})
-
+    response2=  requests.delete("http://"+frontIpAddress+":5000"+"/delete_from_cache/"+str(id))
     return "price updated sucsesfully"
 
 @app.route('/update_price_consistancy/<int:id>', methods=['Put'])
@@ -122,7 +123,7 @@ def update_price2(id):
     price = request.form.get('price')
     sqlite_query = 'update books set cost ='+str(price)+' where item_number ='+str(id)
     rows = getFromDB(sqlite_query)
-
+    
     return "price updated sucsesfully"      
               
 class HelloWorld(Resource):

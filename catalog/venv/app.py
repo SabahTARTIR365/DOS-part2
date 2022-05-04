@@ -8,6 +8,7 @@ app = Flask(__name__)
 api = Api(app)
 
 catalogIpAddress="192.168.1.70" 
+frontIpAddress="192.168.1.135" 
 Port1 = 5000
 Port2 = 4000
 
@@ -83,6 +84,7 @@ def update(id):
    rows = getFromDB(query)
    #I need to send that to catalog2
    response  = requests.put("http://"+catalogIpAddress+":"+Port2+"/update_amount_consistancy/"+ str(id), {'amount':amount})
+   response2=  requests.delete("http://"+frontIpAddress+":5000"+"/delete_from_cache/"+str(id))
    return{'result ': "update successed"}
 
 #this request comes from Catalog Replicas
@@ -110,7 +112,7 @@ def update_price(id):
     sqlite_query = 'update books set cost ='+str(price)+' where item_number ='+str(id)
     rows = getFromDB(sqlite_query)
     response = requests.put("http://"+catalogIpAddress+":"+Port2+"/update_price_consistancy/" + str(id), {'price': price})
-
+    response2=  requests.delete("http://"+frontIpAddress+":5000"+"/delete_from_cache/"+str(id))
     return "price updated sucsesfully"
 
 @app.route('/update_price_consistancy/<int:id>', methods=['Put'])
