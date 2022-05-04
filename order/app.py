@@ -2,8 +2,11 @@ from flask import Flask ,jsonify, request
 import requests
 
 app = Flask(__name__)
+catalog_counter =1
 orderIpAddress= "192.168.1.14"
-catalogIpAddress="192.168.1.70"
+catalogIpAddress1="192.168.1.70"
+catalogIpAddress2="192.168.1.71"
+
 
 @app.route('/')
 def my_app():
@@ -15,6 +18,15 @@ def purchase(id):
     # create get req to catalog server to get the amount of book in the stock
     #then it will dec the number of books and sent aprovel; if not it will reject
     # the req
+    global catalog_counter
+    #round robin between catalog servers 
+    if(catalog_counter ==1):
+      catalogIpAddress=catalogIpAddress1
+      catalog_counter = 2
+    if(catalog_counter ==2):
+      catalogIpAddress=catalogIpAddress2
+      catalog_counter = 1
+
     amount = requests.get("http://"+catalogIpAddress+":5000/count/" + str(id))
     if (amount.text=="fail"):
       return jsonify({"result":"unkown Book"})
