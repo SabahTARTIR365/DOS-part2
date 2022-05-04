@@ -84,7 +84,7 @@ def hello():
 def search(topic):
     
     if cache.isContains(topic):
-       return cache[topic]
+     return cache[topic]
     else:
      port=catalog_round_robin()
      response = requests.get("http://"+catalogIpAddress+":"+port+"/search/" + topic)
@@ -96,9 +96,13 @@ def search(topic):
 # this req send to catalog server 
 @app.route('/info/<int:id>', methods=['Get'])
 def information_id(id):
-    port=catalog_round_robin()
-    response = requests.get("http://"+catalogIpAddress+":"+port+"/info/" + str(id))
-    return response.content
+    if cache.isContains(id):
+     return cache[id]
+    else:
+     port=catalog_round_robin()
+     response = requests.get("http://"+catalogIpAddress+":"+port+"/info/" + str(id))
+     cache.insert(id,response)
+     return response.content
 
 # purchase opearation
 #this post req will be sent to ORDER server in order to purchase specific book
