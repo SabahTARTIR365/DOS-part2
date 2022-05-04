@@ -4,13 +4,12 @@ import sqlite3
 import requests
 
      
-
-
 app = Flask(__name__)
 api = Api(app)
 
-catalogIpAddress1="192.168.1.70" //thats me
-catalogIpAddress2="192.168.1.71"
+catalogIpAddress="192.168.1.70" 
+Port1 = 5000
+Port2 = 4000
 
 def getFromDB(stetment):
     #database connection
@@ -83,7 +82,7 @@ def update(id):
    query='update books set quantity='+str(amount)+' where item_number= "' + str(id)+'"'
    rows = getFromDB(query)
    #I need to send that to catalog2
-   response  = requests.put("http://"+catalogIpAddress2+":5000/update_amount_consistancy/"+ str(id), {'amount':amount2})
+   response  = requests.put("http://"+catalogIpAddress+":"+Port2+"/update_amount_consistancy/"+ str(id), {'amount':amount})
    return{'result ': "update successed"}
 
 #this request comes from Catalog Replicas
@@ -110,7 +109,7 @@ def update_price(id):
     price = request.form.get('price')
     sqlite_query = 'update books set cost ='+str(price)+' where item_number ='+str(id)
     rows = getFromDB(sqlite_query)
-    response = requests.put("http://"+catalogIpAddress2+":5000/update_price_consistancy/" + str(id), {'price': price})
+    response = requests.put("http://"+catalogIpAddress+":"+Port2+"/update_price_consistancy/" + str(id), {'price': price})
 
     return "price updated sucsesfully"
 

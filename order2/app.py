@@ -3,9 +3,11 @@ import requests
 
 app = Flask(__name__)
 catalog_counter =2
-orderIpAddress= "192.168.1.15"
-catalogIpAddress1="192.168.1.70"
-catalogIpAddress2="192.168.1.71"
+orderIpAddress= "192.168.1.14"
+catalogIpAddress="192.168.1.70"
+Port1 = 5000
+Port2 = 4000
+
 
 
 @app.route('/')
@@ -21,13 +23,13 @@ def purchase(id):
     global catalog_counter
     #round robin between catalog servers 
     if(catalog_counter ==1):
-      catalogIpAddress=catalogIpAddress1
+      port=Port1
       catalog_counter = 2
     if(catalog_counter ==2):
-      catalogIpAddress=catalogIpAddress2
+      port=Port2
       catalog_counter = 1
 
-    amount = requests.get("http://"+catalogIpAddress+":5000/count/" + str(id))
+    amount = requests.get("http://"+catalogIpAddress+":"+port+"/count/" + str(id))
     if (amount.text=="fail"):
       return jsonify({"result":"unkown Book"})
     int_amount=int(amount.text)
@@ -37,7 +39,7 @@ def purchase(id):
     else:
      amount2=int_amount-1
      amount3=str(amount2)
-     response  = requests.put("http://"+catalogIpAddress+":5000/update_amount/"+ str(id), {'amount':amount2})
+     response  = requests.put("http://"+catalogIpAddress+":"+port+"/update_amount/"+ str(id), {'amount':amount2})
     res = response.json()
     
     if (res=={'result ':"update successed"}):

@@ -6,11 +6,35 @@ app = Flask(__name__)
 orderIpAddress= "192.168.1.14"
 catalogIpAddress="192.168.1.70"
 
+
 Port1 = 5000
 Port2 = 4000
 
 catalog_counter = 1 
-order_counter   = 1 
+order_counter = 1 
+def catalog_round_robin():
+    global catalog_counter
+    #round robin between catalog servers 
+    if(catalog_counter ==1):
+      port=Port1
+      catalog_counter = 2
+    if(catalog_counter ==2):
+      port=Port2
+      catalog_counter = 1
+    return  port
+
+def order_round_robin():
+    global order_counter
+    #round robin between catalog servers 
+    if(order_counter ==1):
+      port=Port1
+      order_counter = 2
+    if(order_counter ==2):
+      port=Port2
+      order_counter = 1  
+    return  port
+     
+
 
 class LRUCache:
   def __init__(self, size):
@@ -69,6 +93,7 @@ def order_round_robin():
       order_counter = 1  
     return  port
   
+
 @app.route("/")
 def hello():
     return "Hello World!"
@@ -80,7 +105,7 @@ def search(topic):
     port=catalog_round_robin()
     response = requests.get("http://"+catalogIpAddress+":"+port+"/search/" + topic)
     return response.content
-
+  
 # info opearation
 # return  information about specific book according to given ID
 # this req send to catalog server 
