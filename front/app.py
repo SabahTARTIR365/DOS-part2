@@ -49,7 +49,7 @@ class LRUCache:
     except KeyError:
       return -1
  
-  def put(self, key, value):
+  def insert(self, key, value):
     try:
       self.lru_cache.pop(key)
     except KeyError:
@@ -64,7 +64,12 @@ class LRUCache:
       if len(self.lru_cache) >= self.size:
         self.lru_cache.popitem(last=False)
    
- 
+  def isContains(self,key):
+      if key in self.lru_cache.keys():
+       return True
+      else:
+       return False
+
   def show_entries(self):
     print(self.lru_cache)
 
@@ -80,10 +85,14 @@ def hello():
 # this reqest send to the catalog server
 @app.route('/search/<topic>', methods=['Get'])
 def search(topic):
-  
-    port=catalog_round_robin()
-    response = requests.get("http://"+catalogIpAddress+":"+port+"/search/" + topic)
-    return response.content
+    
+    if cache.isContains(topic):
+       return cache[topic]
+    else:
+     port=catalog_round_robin()
+     response = requests.get("http://"+catalogIpAddress+":"+port+"/search/" + topic)
+     cache.insert(topic,response)
+     return response.content
   
 # info opearation
 # return  information about specific book according to given ID
