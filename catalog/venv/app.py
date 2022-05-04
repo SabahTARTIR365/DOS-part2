@@ -1,10 +1,16 @@
 from flask import Flask,request
 from flask_restful import Resource, Api
 import sqlite3
+import requests
+
+     
+
 
 app = Flask(__name__)
 api = Api(app)
 
+catalogIpAddress1="192.168.1.70" //thats me
+catalogIpAddress2="192.168.1.71"
 
 def getFromDB(stetment):
     #database connection
@@ -76,7 +82,21 @@ def update(id):
    amount = request.form.get('amount')     
    query='update books set quantity='+str(amount)+' where item_number= "' + str(id)+'"'
    rows = getFromDB(query)
-       
+   #I need to send that to catalog2
+   response  = requests.put("http://"+catalogIpAddress2+":5000/update_amount_consistancy/"+ str(id), {'amount':amount2})
+   return{'result ': "update successed"}
+
+#this request comes from Catalog Replicas
+@app.route('/update_amount_consistancy/<int:id>',methods=['PUT'])
+def update2(id):
+   query = 'select * from books where item_number =  "' + str(id)+'"'
+   rows = getFromDB(query)
+   if(len(rows)==0) :
+          return{'result ': 'update failed ,unkown Book Id'}
+   amount = request.form.get('amount')     
+   query='update books set quantity='+str(amount)+' where item_number= "' + str(id)+'"'
+   rows = getFromDB(query)
+  
    return{'result ': "update successed"}
 
     
@@ -90,8 +110,21 @@ def update_price(id):
     price = request.form.get('price')
     sqlite_query = 'update books set cost ='+str(price)+' where item_number ='+str(id)
     rows = getFromDB(sqlite_query)
+    response = requests.put("http://"+catalogIpAddress2+":5000/update_price_consistancy/" + str(id), {'price': price})
+
     return "price updated sucsesfully"
-      
+
+@app.route('/update_price_consistancy/<int:id>', methods=['Put'])
+def update_price2(id):
+    sqlite_query1 = 'select * from books where item_number ='+str(id)
+    rows1 = getFromDB(sqlite_query1)
+    if len(rows1)== 0:
+        return "Unkown Book"
+    price = request.form.get('price')
+    sqlite_query = 'update books set cost ='+str(price)+' where item_number ='+str(id)
+    rows = getFromDB(sqlite_query)
+
+    return "price updated sucsesfully"      
               
 class HelloWorld(Resource):
     def get(self):
