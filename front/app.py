@@ -121,6 +121,12 @@ def update_price(id):
     response = requests.put("http://"+catalogIpAddress+":"+port+"/update_price/" + str(id), {'price': price})
     return response.content
 
+@app.route('/delete_from_cache/<int:id>', methods=['Delete'])
+def delete_from_cache (id):
+    if cache.isContains(id):
+        cache.delete(id)
+    return "success deletiong in front server"   
+
 if __name__ == "__main__":
   app.run(debug=True)
 
