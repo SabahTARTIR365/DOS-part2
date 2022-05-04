@@ -5,8 +5,8 @@ app = Flask(__name__)
 catalog_counter =1
 orderIpAddress= "192.168.1.14"
 catalogIpAddress="192.168.1.70"
-Port1 = 5000
-Port2 = 4000
+Port1 = "5000"
+Port2 = "4000"
 
 
 

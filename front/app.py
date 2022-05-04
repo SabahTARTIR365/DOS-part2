@@ -7,8 +7,8 @@ orderIpAddress= "192.168.1.14"
 catalogIpAddress="192.168.1.70"
 
 
-Port1 = 5000
-Port2 = 4000
+Port1 = "5000"
+Port2 = "4000"
 
 catalog_counter = 1 
 order_counter = 1 
@@ -18,7 +18,7 @@ def catalog_round_robin():
     if(catalog_counter ==1):
       port=Port1
       catalog_counter = 2
-    if(catalog_counter ==2):
+    else:
       port=Port2
       catalog_counter = 1
     return  port
@@ -29,7 +29,7 @@ def order_round_robin():
     if(order_counter ==1):
       port=Port1
       order_counter = 2
-    if(order_counter ==2):
+    else:
       port=Port2
       order_counter = 1  
     return  port
@@ -84,11 +84,12 @@ def hello():
 def search(topic):
     
     if cache.isContains(topic):
-     return cache[topic]
+     return cache.lru_cache[topic]
     else:
      port=catalog_round_robin()
+     print(port)
      response = requests.get("http://"+catalogIpAddress+":"+port+"/search/" + topic)
-     cache.insert(topic,response)
+     cache.insert(topic,response.content)
      return response.content
   
 # info opearation
@@ -97,11 +98,12 @@ def search(topic):
 @app.route('/info/<int:id>', methods=['Get'])
 def information_id(id):
     if cache.isContains(id):
-     return cache[id]
+     return cache.lru_cache[id]
     else:
      port=catalog_round_robin()
+     print(port)
      response = requests.get("http://"+catalogIpAddress+":"+port+"/info/" + str(id))
-     cache.insert(id,response)
+     cache.insert(id,response.content)
      return response.content
 
 # purchase opearation
