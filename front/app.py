@@ -65,11 +65,8 @@ class LRUCache:
         self.lru_cache.popitem(last=False)
    
   def isContains(self,key):
-      if key in self.lru_cache.keys():
-       return True
-      else:
-       return False
-
+      return  key in self.lru_cache.keys()
+      
   def show_entries(self):
     print(self.lru_cache)
 
