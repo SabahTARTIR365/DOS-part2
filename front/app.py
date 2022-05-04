@@ -2,8 +2,35 @@ from flask import Flask
 from flask import request
 import requests
 app = Flask(__name__)
-orderIpAddress= "192.168.1.14"
-catalogIpAddress="192.168.1.70"
+orderIpAddress1= "192.168.1.14"
+orderIpAddress2= "192.168.1.15"
+catalogIpAddress1="192.168.1.70"
+catalogIpAddress2="192.168.1.71"
+
+catalog_counter = 1 
+order_counter = 1 
+def catalog_round_robin():
+    global catalog_counter
+    #round robin between catalog servers 
+    if(catalog_counter ==1):
+      catalogIpAddress=catalogIpAddress1
+      catalog_counter = 2
+    if(catalog_counter ==2):
+      catalogIpAddress=catalogIpAddress2
+      catalog_counter = 1
+    return  catalogIpAddress
+
+def order_round_robin():
+    global order_counter
+    #round robin between catalog servers 
+    if(order_counter ==1):
+      orderIpAddress=orderIpAddress1
+      order_counter = 2
+    if(order_counter ==2):
+      orderIpAddress=orderIpAddress2
+      order_counter = 1  
+    return  orderIpAddress
+     
 @app.route("/")
 def hello():
   return "Hello World!"
@@ -14,6 +41,7 @@ def hello():
 # this reqest send to the catalog server
 @app.route('/search/<topic>', methods=['Get'])
 def search(topic):
+    catalogIpAddress=catalog_round_robin()
     response = requests.get("http://"+catalogIpAddress+":5000/search/" + topic)
     return response.content
 
@@ -29,6 +57,7 @@ def information_id(id):
 #this post req will be sent to ORDER server in order to purchase specific book
 @app.route('/purchase/<int:id>', methods=['Post'])
 def purchase(id):
+    orderIpAddress=order_round_robin()
     response = requests.post("http://"+orderIpAddress+":5000/purchase/" + str(id))
     return response.content
 
@@ -36,6 +65,7 @@ def purchase(id):
 #update price of specific book - it will send to catalog server
 @app.route('/update_price/<int:id>', methods=['Put'])
 def update_price(id):
+    catalogIpAddress=catalog_round_robin()
     price = request.json['price']
     response = requests.put("http://"+catalogIpAddress+":5000/update_price/" + str(id), {'price': price})
     return response.content
