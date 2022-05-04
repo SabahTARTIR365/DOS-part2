@@ -71,28 +71,6 @@ class LRUCache:
 # Create an LRU Cache with a size of 5
 cache = LRUCache(5)
 
-def catalog_round_robin():
-    global catalog_counter
-    #round robin between catalog servers 
-    if(catalog_counter ==1):
-      port=Port1
-      catalog_counter = 2
-    if(catalog_counter ==2):
-      port=Port2
-      catalog_counter = 1
-    return  port
-
-def order_round_robin():
-    global order_counter
-    #round robin between catalog servers 
-    if(order_counter ==1):
-      port=Port1
-      order_counter = 2
-    if(order_counter ==2):
-      port=Port2
-      order_counter = 1  
-    return  port
-  
 
 @app.route("/")
 def hello():
@@ -102,6 +80,7 @@ def hello():
 # this reqest send to the catalog server
 @app.route('/search/<topic>', methods=['Get'])
 def search(topic):
+  
     port=catalog_round_robin()
     response = requests.get("http://"+catalogIpAddress+":"+port+"/search/" + topic)
     return response.content
