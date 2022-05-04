@@ -8,8 +8,8 @@ app = Flask(__name__)
 api = Api(app)
 
 catalogIpAddress="192.168.1.70" 
-Port1 = 5000
-Port2 = 4000
+Port1 = "5000"
+Port2 = "4000"
 
 def getFromDB(stetment):
     #database connection
