@@ -1,10 +1,12 @@
 from flask import Flask
 from flask import request
 import requests
+import collections
 app = Flask(__name__)
 orderIpAddress= "192.168.1.14"
 catalogIpAddress="192.168.1.70"
 
+<<<<<<< HEAD
 Port1 = 5000
 Port2 = 4000
 
@@ -32,6 +34,44 @@ def order_round_robin():
       order_counter = 1  
     return  port
      
+=======
+
+class LRUCache:
+  def __init__(self, size):
+    self.size = size
+    self.lru_cache = collections.OrderedDict()
+ 
+  def get(self, key):
+    try:
+      value = self.lru_cache.pop(key)
+      self.lru_cache[key] = value
+      return value
+    except KeyError:
+      return -1
+ 
+  def put(self, key, value):
+    try:
+      self.lru_cache.pop(key)
+    except KeyError:
+      if len(self.lru_cache) >= self.size:
+        self.lru_cache.popitem(last=False)
+    self.lru_cache[key] = value
+
+  def delete(self, key):
+    try:
+      self.lru_cache.pop(key)
+    except KeyError:
+      if len(self.lru_cache) >= self.size:
+        self.lru_cache.popitem(last=False)
+   
+ 
+  def show_entries(self):
+    print(self.lru_cache)
+
+# Create an LRU Cache with a size of 3
+cache = LRUCache(5)
+
+>>>>>>> 1e61c3dd66015d512d973b61df7fb349f73a27d4
 @app.route("/")
 def hello():
   return "Hello World!"
