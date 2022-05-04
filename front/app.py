@@ -6,6 +6,7 @@ app = Flask(__name__)
 orderIpAddress= "192.168.1.14"
 catalogIpAddress="192.168.1.70"
 
+
 class LRUCache:
   def __init__(self, size):
     self.size = size
@@ -38,8 +39,8 @@ class LRUCache:
   def show_entries(self):
     print(self.lru_cache)
 
-
- 
+# Create an LRU Cache with a size of 3
+cache = LRUCache(5)
 
 @app.route("/")
 def hello():
@@ -78,6 +79,4 @@ def update_price(id):
     return response.content
 
 if __name__ == "__main__":
-    # Create an LRU Cache with a size of 3
-  cache = LRUCache(3)
   app.run(debug=True, port=3500)
