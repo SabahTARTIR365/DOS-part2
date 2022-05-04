@@ -25,7 +25,7 @@ def purchase(id):
     if(catalog_counter ==1):
       port=Port1
       catalog_counter = 2
-    if(catalog_counter ==2):
+    else:
       port=Port2
       catalog_counter = 1
 
