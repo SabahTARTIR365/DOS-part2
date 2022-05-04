@@ -9,8 +9,8 @@ api = Api(app)
 
 catalogIpAddress="192.168.1.70" 
 frontIpAddress="192.168.1.135" 
-Port1 = 5000
-Port2 = 4000
+Port1 = "5000"
+Port2 = "4000"
 
 def getFromDB(stetment):
     #database connection

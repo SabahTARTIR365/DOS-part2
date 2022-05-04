@@ -5,8 +5,8 @@ app = Flask(__name__)
 catalog_counter =2
 orderIpAddress= "192.168.1.14"
 catalogIpAddress="192.168.1.70"
-Port1 = 5000
-Port2 = 4000
+Port1 = "5000"
+Port2 = "4000"
 
 
 
@@ -25,7 +25,7 @@ def purchase(id):
     if(catalog_counter ==1):
       port=Port1
       catalog_counter = 2
-    if(catalog_counter ==2):
+    else:
       port=Port2
       catalog_counter = 1
 
